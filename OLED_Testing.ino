@@ -6,6 +6,7 @@
 const int x = 128;
 const int y = 64;
 const int reset = -1;
+long randNumber;
 
 Adafruit_SSD1306 display(x, y, &Wire, reset);
 const int button = 6;
@@ -21,6 +22,9 @@ void setup() {
     Serial.println(F("SSD1306 allocation failed"));
     for (;;);
   }
+
+  //start up seed generator 
+  randomSeed(analogRead(0));
 
   //set button to be an input
   pinMode(button, INPUT);
@@ -40,7 +44,67 @@ void setup() {
 void loop() {
   // put your main code here, to run repeatedly:
   state = digitalRead(button);
+  randNumber = random(6);
 
+  if(state == HIGH){
+    delay(100);
+    state = digitalRead(button);
+    if(state == LOW){ //button press not hold 
+      display.setTextSize(1.5);
+      display.setTextColor(WHITE);
+      display.setCursor(0,40);
+      display.clearDisplay();
+
+      //totally non-random responses
+      switch(randNumber){
+        case 0:
+          display.println(F("Vote Mumbo!"));
+          break;
+        case 1:
+          display.println(F("wow"));
+          break;
+        case 2:
+          display.println(F("My dad said no"));
+        case 3:
+          display.println(F("womp womp"));
+          break;
+        case 4:
+          display.println(F("tnt yes"));
+          break;
+        case 5:
+          display.println(F("dont get exiled"));
+          break;
+      }
+      display.display();   
+      delay(1000);
+      stash();
+    }
+  }
+  Serial.println(randNumber);
+  // stash();
+
+  display.display();
+  delay(20);
+
+}
+
+void eyes(){
+  display.fillRect(30, 17, 17, 7, WHITE);
+  display.fillRect(35, 12, 7, 17, WHITE);
+  display.fillRect(83, 17, 17, 7, WHITE);
+  display.fillRect(88, 12, 7, 17, WHITE);
+}
+
+void angryEyes(){
+  display.drawLine(33, 7, 53, 10, WHITE);
+  display.drawLine(98, 7, 78, 10, WHITE);
+  display.fillRect(30, 17, 17, 7, WHITE);
+  display.fillRect(35, 12, 7, 17, WHITE);
+  display.fillRect(83, 17, 17, 7, WHITE);
+  display.fillRect(88, 12, 7, 17, WHITE);
+}
+
+void stash(){
   if(swap == 0){
     display.clearDisplay();
     eyes();
@@ -73,26 +137,6 @@ void loop() {
     swap = 0;
   }
   delay(1000);
-
-  display.display();
-  delay(20);
-
-}
-
-void eyes(){
-  display.fillRect(30, 17, 17, 7, WHITE);
-  display.fillRect(35, 12, 7, 17, WHITE);
-  display.fillRect(83, 17, 17, 7, WHITE);
-  display.fillRect(88, 12, 7, 17, WHITE);
-}
-
-void angryEyes(){
-  display.drawLine(33, 7, 53, 10, WHITE);
-  display.drawLine(98, 7, 78, 10, WHITE);
-  display.fillRect(30, 17, 17, 7, WHITE);
-  display.fillRect(35, 12, 7, 17, WHITE);
-  display.fillRect(83, 17, 17, 7, WHITE);
-  display.fillRect(88, 12, 7, 17, WHITE);
 }
 
 
