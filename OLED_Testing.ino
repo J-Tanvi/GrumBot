@@ -8,6 +8,11 @@ const int y = 64; //height
 const int reset = -1;
 long randNumber;
 
+//add potentiometer (mostly for fun :D)
+#define knob A0
+int knobValue = 0;
+int pitch;
+
 //set the led to pin 4
 #define led 4
 
@@ -67,6 +72,10 @@ void loop() {
   state = digitalRead(button);
   randNumber = random(7);
 
+  //change sound
+  knobValue = analogRead(knob);
+  pitch = map(knobValue, 0, 1023, 32, 700);
+
   //i want to replace this with a timer so after a certain amount of time 
   //it'll just start screaming for food/love/attention
   //rn its more so just a random chance thing (you'll never know when he strikes)
@@ -77,7 +86,7 @@ void loop() {
   while(petty == 500 && pets() == false){
     angryEyes();
     ledOn();
-    tone(vocal, 85); 
+    tone(vocal, pitch); 
     delay(1000);
     noTone(vocal);
   }
@@ -248,7 +257,8 @@ void blink(){
   }
 }
 
-/*void moving(){
+/*
+void moving(){
   if(swap == 0){
     display.clearDisplay();
     //eyes
