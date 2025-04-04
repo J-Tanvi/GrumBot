@@ -1,5 +1,3 @@
-//this SHOULD just be the code from lab i - the shape function
-
 import org.firmata4j.I2CDevice;
 import org.firmata4j.IODevice;
 import org.firmata4j.firmata.FirmataDevice;
@@ -10,7 +8,7 @@ import java.io.IOException;
 
 public class OLEDDisplay {
 
-    private final String myPort = "COM8";
+    private final String myPort = "COM8"; // modify for your own computer & setup.
     private IODevice myGroveBoard;
     private SSD1306 theOledObject;
 
@@ -45,17 +43,6 @@ public class OLEDDisplay {
     }
 
     /**
-     * draw a shape on the OLEDDisplay
-     *
-     * @param type a String (Oval or Rectangle)
-     * @param w the width of the shape to draw
-     * @param h the height of the shape to draw
-     */
-    public void drawShape(String type, int w, int h)  {
-
-    }
-
-    /**
      * Example code to show you how to write to the OLED
      */
     private void testDisplay(boolean on) {
@@ -76,38 +63,40 @@ public class OLEDDisplay {
 
     }
 
+    public void drawFace(String feat) throws InterruptedException {
+        MonochromeCanvas.Color c = MonochromeCanvas.Color.BRIGHT;
+        face grum = new face(this.theOledObject);
+
+        grum.clearScreen();
+        if(feat.equals("eyes")) {
+            grum.eyes();
+        } else if (feat.equals("blink")) {
+            grum.blink();
+        } else if(feat.equals("mumbo")){
+            grum.mustache(1);
+        }
+        this.theOledObject.display();
+    }
+
     /**
      * Main method
      * @param args
      * @throws IOException
      */
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) throws IOException, InterruptedException {
         OLEDDisplay d = new OLEDDisplay();
+        //starting animation
+//        d.drawFace("blink");
+//        Thread.sleep(2000);
 
-        d.testDisplay(true);
+        d.drawFace("eyes");
+        d.drawFace("mumbo");
+        Thread.sleep(3000);
 
-        //pause for a moment
-        try {
-            System.out.println("Pausing.");
-            Thread.sleep(3000);
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
-        }
-
-        d.testDisplay(false);
-
-        //pause for a moment
-        try {
-            System.out.println("Pausing.");
-            Thread.sleep(3000);
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
-        }
-
-        //ONCE YOU HAVE WRITTEN YOUR CODE,
-        //UNCOMMENT THE CODE BELOW TO TEST!
-//        d.drawShape("Oval", 10, 8);
+//        d.testDisplay(true);
+//        Thread.sleep(2000);
 //
+//        //pause for a moment
 //        try {
 //            System.out.println("Pausing.");
 //            Thread.sleep(3000);
@@ -115,16 +104,16 @@ public class OLEDDisplay {
 //            throw new RuntimeException(e);
 //        }
 //
-//        d.drawShape("Rectangle", 10, 8);
+//        d.testDisplay(false);
 //
+//        //pause for a moment
 //        try {
 //            System.out.println("Pausing.");
 //            Thread.sleep(3000);
 //        } catch (InterruptedException e) {
 //            throw new RuntimeException(e);
 //        }
-
+//
         d.stopDisplay();
     }
-
 }
